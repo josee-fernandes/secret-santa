@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { v4 as uuidV4 } from 'uuid'
 import { toast } from 'sonner'
 import { Trash } from 'lucide-react'
+import { Raffle } from '@/components/raffle'
 
 const addParticipantSchema = z.object({
   name: z.string().min(1),
@@ -16,6 +17,59 @@ const addParticipantSchema = z.object({
 })
 
 type AddParticipantFormData = z.infer<typeof addParticipantSchema>
+
+const sample: Participants = [
+  {
+    id: uuidV4(),
+    name: 'AAAAA',
+    phone: '(00) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'BBBBB',
+    phone: '(11) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'CCCCC',
+    phone: '(22) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'DDDDD',
+    phone: '(33) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'EEEEE',
+    phone: '(44) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'FFFFF',
+    phone: '(55) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'GGGGG',
+    phone: '(66) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'HHHHH',
+    phone: '(77) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'IIIII',
+    phone: '(88) 91234-5678',
+  },
+  {
+    id: uuidV4(),
+    name: 'JJJJJ',
+    phone: '(99) 91234-5678',
+  },
+]
 
 const Home: NextPage = () => {
   const { register, handleSubmit, reset } = useForm<AddParticipantFormData>({
@@ -26,7 +80,7 @@ const Home: NextPage = () => {
     resolver: zodResolver(addParticipantSchema),
   })
 
-  const [participants, setParticipants] = useState<Participants>([])
+  const [participants, setParticipants] = useState<Participants>(sample)
 
   const handleAddParticipant = useCallback(
     (data: AddParticipantFormData) => {
@@ -85,37 +139,42 @@ const Home: NextPage = () => {
             placeholder="(00) 91234-5678"
             {...register('phone')}
           />
-          <Button className="w-full md:w-max" type="submit">
+          <Button className="w-full max-w-96 md:w-max" type="submit">
             Adicionar participante
           </Button>
         </form>
 
-        <div className="flex flex-col gap-4 py-10">
-          <h2 className="text-xl font-bold">Participantes</h2>
-          {participants.map((participant) => (
-            <div
-              key={participant.id}
-              className="group border rounded p-4 bg-card flex justify-between gap-4"
-            >
-              <div>
-                <p>{participant.name}</p>
-                <span className="text-muted-foreground font-semibold text-sm">
-                  {participant.phone}
-                </span>
-              </div>
-              <div>
-                <Button
-                  className="group-hover:opacity-100 md:opacity-0 transition-all"
-                  size="icon"
-                  variant="destructive"
-                  onClick={() => handleRemoveParticipant(participant.id)}
+        {participants.length > 0 && (
+          <>
+            <Raffle participants={participants} />
+            <div className="flex flex-col gap-4 mt-10">
+              <h2 className="text-xl font-bold">Participantes</h2>
+              {participants.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="group border rounded p-4 bg-card flex justify-between gap-4"
                 >
-                  <Trash className="size-4" />
-                </Button>
-              </div>
+                  <div>
+                    <p>{participant.name}</p>
+                    <span className="text-muted-foreground font-semibold text-sm">
+                      {participant.phone}
+                    </span>
+                  </div>
+                  <div>
+                    <Button
+                      className="group-hover:opacity-100 md:opacity-0 transition-all"
+                      size="icon"
+                      variant="destructive"
+                      onClick={() => handleRemoveParticipant(participant.id)}
+                    >
+                      <Trash className="size-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
     </div>
   )
